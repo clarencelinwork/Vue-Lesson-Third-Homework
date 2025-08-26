@@ -84,6 +84,10 @@ const cartTotal = computed(() => {
 
 const remark = ref()
 
+const order = ref([])
+const orderRemark = ref()
+const orderTotal = ref(0)
+
 function addToCart(drink) {
   let nowItem = cartItems.value.find((item) => item.id === drink.id)
 
@@ -104,7 +108,7 @@ function addToCart(drink) {
 }
 
 function removeCart(drink) {
-  cartItems.value = cartItems.value.filter(item => item.id !== drink.id);
+  cartItems.value = cartItems.value.filter((item) => item.id !== drink.id)
 }
 
 function updateCartItemsTotal(cartItem) {
@@ -113,6 +117,16 @@ function updateCartItemsTotal(cartItem) {
 
 function getItemTotal(cartItem) {
   return cartItem.price * cartItem.count
+}
+
+function submitCartToOrder() {
+  order.value = cartItems.value
+  orderRemark.value = remark.value
+  orderTotal.value = cartTotal.value
+
+  cartItems.value = []
+  selectCount.value = []
+  remark.value = ''
 }
 </script>
 
@@ -150,7 +164,11 @@ function getItemTotal(cartItem) {
               <td>{{ cartItem.name }}</td>
               <td>{{ cartItem.description }}</td>
               <td>
-                <select class="form-control" @change="updateCartItemsTotal(cartItem)" v-model="selectCount[cartItem.id]">
+                <select
+                  class="form-control"
+                  @change="updateCartItemsTotal(cartItem)"
+                  v-model="selectCount[cartItem.id]"
+                >
                   <option v-for="itemCount in 10" :value="itemCount" :key="itemCount">
                     {{ itemCount }}
                   </option>
@@ -173,11 +191,38 @@ function getItemTotal(cartItem) {
         </table>
         <textarea class="form-control" rows="5" placeholder="備註" v-model="remark"></textarea>
         <div class="text-right mt-2">
-          <button class="btn btn-primary">送出</button>
+          <button class="btn btn-primary" @click="submitCartToOrder">送出</button>
         </div>
       </div>
       <div class="col-12">
-        <hr/>
+        <hr />
+      </div>
+      <div class="col-8 text-center" v-if="order.length > 0">
+        <div>訂單</div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <td>品項</td>
+              <td>數量</td>
+              <td>小記</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="orderItem in order" :key="orderItem.id">
+              <td>{{ orderItem.name }}</td>
+              <td>{{ orderItem.count }}</td>
+              <td>{{ orderItem.total }}</td>
+            </tr>
+          </tbody>
+          <tfoot class="text-right">
+            <tr v-if="orderRemark.length > 0">
+              <td colspan="3">備註:{{ orderRemark }}</td>
+            </tr>
+            <tr>
+              <td colspan="3">總計:{{ orderTotal }}</td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
     </div>
   </div>
