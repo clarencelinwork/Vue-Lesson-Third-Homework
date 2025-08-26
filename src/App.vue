@@ -158,9 +158,6 @@ function submitCartToOrder() {
 </template>
 
 <style scoped>
-.name-font {
-  font-size: 20px;
-}
 
 .total-font {
   font-size: 22px;

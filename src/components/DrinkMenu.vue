@@ -93,6 +93,10 @@ const pass = (drink) => {
   padding: 10px;
 }
 
+.name-font {
+  font-size: 20px;
+}
+
 .mouse-pointer {
   cursor: pointer;
 }
