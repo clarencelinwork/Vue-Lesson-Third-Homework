@@ -103,6 +103,10 @@ function addToCart(drink) {
   }
 }
 
+function removeCart(drink) {
+  cartItems.value = cartItems.value.filter(item => item.id !== drink.id);
+}
+
 function updateCartItemsTotal(cartItem) {
   cartItem.count = selectCount.value[cartItem.id]
 }
@@ -141,7 +145,7 @@ function getItemTotal(cartItem) {
           <tbody class="text-center" v-if="cartItems.length > 0">
             <tr v-for="cartItem in cartItems" :key="cartItem.id">
               <td>
-                <button type="button">X</button>
+                <button type="button" @click="removeCart(cartItem)">X</button>
               </td>
               <td>{{ cartItem.name }}</td>
               <td>{{ cartItem.description }}</td>
