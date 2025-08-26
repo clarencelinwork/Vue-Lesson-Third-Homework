@@ -215,7 +215,7 @@ function submitCartToOrder() {
             </tr>
           </tbody>
           <tfoot class="text-right">
-            <tr v-if="orderRemark.length > 0">
+            <tr v-if="orderRemark">
               <td colspan="3">備註:{{ orderRemark }}</td>
             </tr>
             <tr>
