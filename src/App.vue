@@ -3,74 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'popper.js'
 import 'bootstrap'
 
-import { ref, computed } from 'vue'
+import DrinkMenu from './components/DrinkMenu.vue'
 
-const drinks = ref([
-  {
-    id: 1,
-    name: '珍珠奶茶',
-    description: '香濃奶茶搭配QQ珍珠',
-    price: 50,
-    count: 0,
-    total: 0,
-  },
-  {
-    id: 2,
-    name: '冬瓜檸檬',
-    description: '清新冬瓜配上新鮮檸檬',
-    price: 45,
-    count: 0,
-    total: 0,
-  },
-  {
-    id: 3,
-    name: '翡翠檸檬',
-    description: '綠茶與檸檬的完美結合',
-    price: 55,
-    count: 0,
-    total: 0,
-  },
-  {
-    id: 4,
-    name: '四季春茶',
-    description: '香醇四季春茶，回甘無比',
-    price: 45,
-    count: 0,
-    total: 0,
-  },
-  {
-    id: 5,
-    name: '阿薩姆奶茶',
-    description: '阿薩姆紅茶搭配香醇鮮奶',
-    price: 50,
-    count: 0,
-    total: 0,
-  },
-  {
-    id: 6,
-    name: '檸檬冰茶',
-    description: '檸檬與冰茶的清新組合',
-    price: 45,
-    count: 0,
-    total: 0,
-  },
-  {
-    id: 7,
-    name: '芒果綠茶',
-    description: '芒果與綠茶的獨特風味',
-    price: 55,
-    count: 0,
-    total: 0,
-  },
-  {
-    id: 8,
-    name: '抹茶拿鐵',
-    description: '抹茶與鮮奶的絕配',
-    price: 60,
-    count: 0,
-    total: 0,
-  },
-])
+import { ref, computed } from 'vue'
 
 const cartItems = ref([])
 
@@ -88,7 +23,7 @@ const order = ref([])
 const orderRemark = ref()
 const orderTotal = ref(0)
 
-function addToCart(drink) {
+const addToCart = (drink) => {
   let nowItem = cartItems.value.find((item) => item.id === drink.id)
 
   if (nowItem) {
@@ -134,15 +69,7 @@ function submitCartToOrder() {
   <div class="container p-5">
     <div class="row">
       <div class="col-4">
-        <div
-          class="drink-list mouse-pointer"
-          v-for="drink in drinks"
-          :key="drink.id"
-          @click="addToCart(drink)"
-        >
-          <div class="name-font">{{ drink.name }} ${{ drink.price }}</div>
-          <div>{{ drink.description }}</div>
-        </div>
+        <DrinkMenu @emit-drink="addToCart" />
       </div>
       <div class="col-8">
         <table class="table table-bordered">
@@ -231,21 +158,11 @@ function submitCartToOrder() {
 </template>
 
 <style scoped>
-.drink-list {
-  border: 1px solid #000;
-  border-radius: 5px;
-  padding: 10px;
-}
-
 .name-font {
   font-size: 20px;
 }
 
 .total-font {
   font-size: 22px;
-}
-
-.mouse-pointer {
-  cursor: pointer;
 }
 </style>
