@@ -4,6 +4,7 @@ import 'popper.js'
 import 'bootstrap'
 
 import DrinkMenu from './components/DrinkMenu.vue'
+import Cart from './components/Cart.vue'
 
 import { ref, computed } from 'vue'
 
@@ -42,16 +43,12 @@ const addToCart = (drink) => {
   }
 }
 
-function removeCart(drink) {
-  cartItems.value = cartItems.value.filter((item) => item.id !== drink.id)
+const removeCart = (cartItemId) => {
+  cartItems.value = cartItems.value.filter((item) => item.id !== cartItemId)
 }
 
-function updateCartItemsTotal(cartItem) {
+const updateCartItemsTotal = (cartItem) => {
   cartItem.count = selectCount.value[cartItem.id]
-}
-
-function getItemTotal(cartItem) {
-  return cartItem.price * cartItem.count
 }
 
 function submitCartToOrder() {
@@ -72,50 +69,13 @@ function submitCartToOrder() {
         <DrinkMenu @emit-drink="addToCart" />
       </div>
       <div class="col-8">
-        <table class="table table-bordered">
-          <thead>
-            <tr class="text-center">
-              <th>操作</th>
-              <th>品項</th>
-              <th>描述</th>
-              <th>數量</th>
-              <th>單價</th>
-              <th>小計</th>
-            </tr>
-          </thead>
-          <tbody class="text-center" v-if="cartItems.length > 0">
-            <tr v-for="cartItem in cartItems" :key="cartItem.id">
-              <td>
-                <button type="button" @click="removeCart(cartItem)">X</button>
-              </td>
-              <td>{{ cartItem.name }}</td>
-              <td>{{ cartItem.description }}</td>
-              <td>
-                <select
-                  class="form-control"
-                  @change="updateCartItemsTotal(cartItem)"
-                  v-model="selectCount[cartItem.id]"
-                >
-                  <option v-for="itemCount in 10" :value="itemCount" :key="itemCount">
-                    {{ itemCount }}
-                  </option>
-                </select>
-              </td>
-              <td>{{ cartItem.price }}</td>
-              <td>{{ getItemTotal(cartItem) }}</td>
-            </tr>
-          </tbody>
-          <tbody class="text-center" v-else>
-            <tr>
-              <td colspan="6">請選擇商品</td>
-            </tr>
-          </tbody>
-          <tfoot class="text-right" v-if="cartItems.length > 0">
-            <tr>
-              <td class="total-font" colspan="6">總計:{{ cartTotal }}</td>
-            </tr>
-          </tfoot>
-        </table>
+        <Cart
+          :cart-items="cartItems"
+          :select-count="selectCount"
+          :cart-total="cartTotal"
+          @emit-item-count="updateCartItemsTotal"
+          @emit-remove-item="removeCart"
+        />
         <textarea class="form-control" rows="5" placeholder="備註" v-model="remark"></textarea>
         <div class="text-right mt-2">
           <button class="btn btn-primary" @click="submitCartToOrder">送出</button>
@@ -126,30 +86,30 @@ function submitCartToOrder() {
       </div>
     </div>
     <div class="row justify-content-center">
-      <div class="col-8 text-center " v-if="order.length > 0">
+      <div class="col-8 text-center" v-if="order.length > 0">
         <div>訂單</div>
         <table class="table table-bordered">
           <thead>
-          <tr>
-            <td>品項</td>
-            <td>數量</td>
-            <td>小記</td>
-          </tr>
+            <tr>
+              <td>品項</td>
+              <td>數量</td>
+              <td>小記</td>
+            </tr>
           </thead>
           <tbody>
-          <tr v-for="orderItem in order" :key="orderItem.id">
-            <td>{{ orderItem.name }}</td>
-            <td>{{ orderItem.count }}</td>
-            <td>{{ orderItem.total }}</td>
-          </tr>
+            <tr v-for="orderItem in order" :key="orderItem.id">
+              <td>{{ orderItem.name }}</td>
+              <td>{{ orderItem.count }}</td>
+              <td>{{ orderItem.total }}</td>
+            </tr>
           </tbody>
           <tfoot class="text-right">
-          <tr v-if="orderRemark">
-            <td colspan="3">備註:{{ orderRemark }}</td>
-          </tr>
-          <tr>
-            <td colspan="3">總計:{{ orderTotal }}</td>
-          </tr>
+            <tr v-if="orderRemark">
+              <td colspan="3">備註:{{ orderRemark }}</td>
+            </tr>
+            <tr>
+              <td colspan="3">總計:{{ orderTotal }}</td>
+            </tr>
           </tfoot>
         </table>
       </div>
@@ -158,7 +118,6 @@ function submitCartToOrder() {
 </template>
 
 <style scoped>
-
 .total-font {
   font-size: 22px;
 }
