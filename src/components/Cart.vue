@@ -61,12 +61,16 @@ function getItemTotal(cartItem) {
     </tbody>
     <tfoot class="text-right" v-if="cartItems.length > 0">
     <tr>
-      <td class="total-font" colspan="6">總計:{{ props.cartTotal }}</td>
+      <td class="total-font" colspan="6">
+        <p>總計:${{ props.cartTotal }}</p>
+      </td>
     </tr>
     </tfoot>
   </table>
 </template>
 
 <style scoped>
-
+.total-font {
+  font-size: 22px;
+}
 </style>

@@ -5,6 +5,7 @@ import 'bootstrap'
 
 import DrinkMenu from './components/DrinkMenu.vue'
 import Cart from './components/Cart.vue'
+import Order from './components/Order.vue'
 
 import { ref, computed } from 'vue'
 
@@ -88,37 +89,12 @@ function submitCartToOrder() {
     <div class="row justify-content-center">
       <div class="col-8 text-center" v-if="order.length > 0">
         <div>訂單</div>
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <td>品項</td>
-              <td>數量</td>
-              <td>小記</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="orderItem in order" :key="orderItem.id">
-              <td>{{ orderItem.name }}</td>
-              <td>{{ orderItem.count }}</td>
-              <td>{{ orderItem.total }}</td>
-            </tr>
-          </tbody>
-          <tfoot class="text-right">
-            <tr v-if="orderRemark">
-              <td colspan="3">備註:{{ orderRemark }}</td>
-            </tr>
-            <tr>
-              <td colspan="3">總計:{{ orderTotal }}</td>
-            </tr>
-          </tfoot>
-        </table>
+        <Order :order="order" :orderRemark="orderRemark" :orderTotal="orderTotal" />
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.total-font {
-  font-size: 22px;
-}
+
 </style>
